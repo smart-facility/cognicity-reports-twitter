@@ -4,7 +4,6 @@ CogniCity
 
 ####cognicity-reports: NodeJS app to collect unconfirmed reports from Twitter and send verification requests.
 
-
 ### About
 Cognicity-reports is the NodeJS reports module for the CogniCity framework, responsible for collecting relevant tweets, and sending users verification messages via Twitter. For detailed framework documentation see [http://cognicity.info](http://cognicity.info).
 
@@ -21,6 +20,16 @@ Cognicity-reports is the NodeJS reports module for the CogniCity framework, resp
 Download the source code for cognicity-reports from github: [http://github.com/smart-facility/cognicity-reports](http://github.com/smart-facility/cognicity-reports) or view the CogniCity installation documentation at [http://cognicity.info](http://cognicity.info).
 
 Install the node dependencies in package.json using NPM: `npm install`
+
+### PostgreSQL/PostGIS schema
+These can be found in the [cognicity-schema](https://github.com/smart-facility/cognicity-schema) repository and consist of
+* createdb.sql, which creates an empty database for cognicity, and
+* schema.sql, which adds PostGIS support and builds the relational schema for cognicity.
+These scripts need to be run in that order in order to set up the database, e.g.
+```shell
+psql -U postgres -h hostname -f createdb.sql
+psql -U postgres -h hostname -d cognicity -f schema.sql
+```
 
 #### Platform-specific notes ####
 To build on OS X we recommend using [homebrew](http://brew.sh) to install node, npm, and required node modules as follows:
@@ -53,12 +62,8 @@ Set the app authentication parameters as provided by Twitter. See the [ntwitter-
 * thanks_in/en - Text for geolocation reminders [Bahasa Indonesian/English]
 
 #### Postgres connection
-* connection string - PostgreSQL connection details (see node-postgres module documenation)[https://github.com/brianc/node-postgres]
-* postgres tables as defined in database schema
-
-### PostgreSQL/PostGIS schema (SQL folder)
-* createdb.sql creates an empty database for cognicity
-* schame.sql adds PostGIS support and builds the relational schema for cognicity
+* connection string - PostgreSQL connection details (see [node-postgres module documenation](https://github.com/brianc/node-postgres)).
+* postgres tables as defined in the database [schema](https://github.com/smart-facility/cognicity-schema/blob/master/schema.sql)
 
 ### Run
 The app is run as a background process using the Daemonize 2 library. The process name is set to the configuration instance `config.instance` defined in the configuration file.
