@@ -2,14 +2,16 @@ CogniCity
 ===========
 **Open Source GeoSocial Intelligence Framework**
 
-####cognicity-reports: NodeJS app to collect unconfirmed reports from Twitter and send verification requests.
+# MOVE
+
+Note that this repository will shortly move to [cognicity-reports-twitter](https://github.com/smart-facility/cognicity-reports-twitter). This is as part of our refactoring to make cognicity-reports a master module for collecting reports from a number of sources to be stored in a database (using the [cognicity-schema](https://github.com/smart-facility/cognicity-schema) schema). We will be transforming [cognicity-reports-twitter](https://github.com/smart-facility/cognicity-reports-twitter) (for conventional Twitter API collection) and [cognicity-reports-powertrack](https://github.com/smart-facility/cognicity-reports-powertrack) (for Twitter Gnip collection) into optional submodules, along with other new submodules to be developed for collecting data from other data sources.
 
 ### About
 Cognicity-reports is the NodeJS reports module for the CogniCity framework, responsible for collecting relevant tweets, and sending users verification messages via Twitter. For detailed framework documentation see [http://cognicity.info](http://cognicity.info).
 
 ### Dependencies
 * [NodeJS](http://nodejs.org) version 0.10.12 or later
-* [PostgreSQL](http://www.postgresql.org) version 9.2 or later, with [PostGIS](http://postgis/) version 2.0 or later.
+* [PostgreSQL](http://www.postgresql.org) version 9.2 or later, with [PostGIS](http://postgis.org/) version 2.0 or later.
 
 #### Node Modules
 * Express version 3.2.6 or later
