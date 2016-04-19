@@ -14,9 +14,7 @@ Cognicity-reports is the NodeJS reports module for the CogniCity framework, resp
 * [PostgreSQL](http://www.postgresql.org) version 9.2 or later, with [PostGIS](http://postgis.org/) version 2.0 or later.
 
 #### Node Modules
-* Express version 3.2.6 or later
-* Node-Daemonize 2 version 0.4.2 or later
-* Node-Postgres version 2.0.0 or later
+* Check package.json for details
 
 ### Installation
 Download the source code for cognicity-reports from github: [http://github.com/smart-facility/cognicity-reports](http://github.com/smart-facility/cognicity-reports) or view the CogniCity installation documentation at [http://cognicity.info](http://cognicity.info).
