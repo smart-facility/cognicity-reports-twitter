@@ -1,17 +1,30 @@
 {
-	"name": "cognicity-reports",
+	"name": "cognicity-reports-twitter",
 	"description": "CogniCity reports module",
 	"version": "0.0.1",
 	"author": "Tomas Holderness <tomas@uow.edu.au>",
 	"preferGlobal":false,
 	"private": true,
-	"dependencies": {
-		"express": ">=3.2.6",
-		"daemonize2": ">=0.4.2",
-		"ntwitter": ">=0.5.0",
-		"pg": ">=2.0.0"
-	},
-	"engines":{
-		"node":">=0.10.12"
-		}
+  "dependencies": {
+    "ntwitter": "^0.5.0",
+    "rsvp": "^3.2.1"
+  },
+  "devDependencies": {
+    "jsdoc": "^3.2.0",
+    "jshint": "^2.5.8",
+    "mocha": "^2.0.1",
+    "unit.js": "^1.0.2",
+    "istanbul": "^0.3.5"
+  },
+  "engines": {
+    "node": "^4.2.1"
+  },
+  "scripts": {
+    "test": "npm run jshint && npm run mocha",
+    "jshint": "jshint index.js TwitterDataSource.js sample-twitter-config.js test/testTwitterDataSource.js",
+    "mocha": "mocha test",
+    "build-docs": "jsdoc -d docs package.json index.js sample-twitter-config.js TwitterDataSource.js",
+    "build": "npm test && npm run build-docs && npm run coverage",
+    "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha"
+  }
 }
