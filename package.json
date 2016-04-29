@@ -23,7 +23,7 @@
     "test": "npm run jshint && npm run mocha",
     "jshint": "jshint index.js TwitterDataSource.js sample-twitter-config.js test/testTwitterDataSource.js",
     "mocha": "mocha test",
-    "build-docs": "jsdoc -d docs package.json index.js sample-twitter-config.js TwitterDataSource.js",
+    "build-docs": "jsdoc -d docs package.json index.js sample-twitter-config.js TwitterDataSource.js ../BaseTwitterDataSource/BaseTwitterDataSource.js",
     "build": "npm test && npm run build-docs && npm run coverage",
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha"
   }
