@@ -10,7 +10,7 @@
  */
 
 var TwitterDataSource = require('./TwitterDataSource');
-var config = require('../../live-config/cognicity-reports-twitter');
+var config = require('./sample-twitter-config');
 
 // ntwitter twitter interface module
 var Twitter = require('ntwitter');
