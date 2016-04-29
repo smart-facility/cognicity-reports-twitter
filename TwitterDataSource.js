@@ -1,8 +1,5 @@
 'use strict';
 
-// RSVP promises module
-var RSVP = require('rsvp');
-
 // Prototype object this object extends from - contains basic twitter interaction functions
 var BaseTwitterDataSource = require('../BaseTwitterDataSource/BaseTwitterDataSource.js');
 
@@ -147,10 +144,10 @@ TwitterDataSource.prototype.filter = function(tweet) {
 						// City location check
 						if (tweet.lang === 'id'){
 							self.insertNonSpatial(tweet); // User sent us a message but no geo, log as such
-							self.sendReplyTweet(tweet.user.screen_name, self.config.twitter.thanks_text_in); // send geo reminder
+							self.sendReplyTweet(tweet.user.screen_name, self.config.twitter.thanks_text.in); // send geo reminder
 						} else {
 							self.insertNonSpatial(tweet); // User sent us a message but no geo, log as such
-							self.sendReplyTweet(tweet.user.screen_name, self.config.twitter.thanks_text_en); // send geo reminder
+							self.sendReplyTweet(tweet.user.screen_name, self.config.twitter.thanks_text.en); // send geo reminder
 						}
 					}
 					return;
@@ -162,17 +159,17 @@ TwitterDataSource.prototype.filter = function(tweet) {
 					if ( tweet.coordinates !== null ) {
 						self.insertUnConfirmed(tweet); // insert unconfirmed report, then invite the user to participate
 						if ( tweet.lang === 'id' ){
-							self.sendReplyTweet(tweet.user.screen_name, self.config.twitter.invite_text_in, generateInsertInviteeCallback(tweet));	
+							self.sendReplyTweet(tweet.user.screen_name, self.config.twitter.invite_text.in, generateInsertInviteeCallback(tweet));	
 						} else {
-							self.sendReplyTweet(tweet.user.screen_name, self.config.twitter.invite_text_en, generateInsertInviteeCallback(tweet));
+							self.sendReplyTweet(tweet.user.screen_name, self.config.twitter.invite_text.en, generateInsertInviteeCallback(tweet));
 						}
 						
 					} else {
 						// no geo, no user - but keyword so send invite
 						if (tweet.lang === 'id'){
-							self.sendReplyTweet(tweet.user.screen_name, self.config.twitter.invite_text_in, generateInsertInviteeCallback(tweet));
+							self.sendReplyTweet(tweet.user.screen_name, self.config.twitter.invite_text.in, generateInsertInviteeCallback(tweet));
 						} else {
-							self.sendReplyTweet(tweet.user.screen_name, self.config.twitter.invite_text_en, generateInsertInviteeCallback(tweet));
+							self.sendReplyTweet(tweet.user.screen_name, self.config.twitter.invite_text.en, generateInsertInviteeCallback(tweet));
 						}
 					}
 					
@@ -363,20 +360,6 @@ TwitterDataSource.prototype.insertNonSpatialUser = function(tweet) {
 			}
 		);
 	});
-};
-
-/**
- * Validate the data source configuration.
- * Check twitter credentials and tweet message lengths.
- * @return {Promise} Validation promise, throws an error on any validation error
- */
-TwitterDataSource.prototype.validateConfig = function() {
-	var self = this;
-		
-	// Contain separate validation promises in one 'all' promise
-	return RSVP.all([
-	    self.validateTwitterConfig()
-	]);
 };
 
 // Export the TwitterDataSource constructor

@@ -31,9 +31,11 @@ config.pg.table_nonspatial_tweet_reports = 'nonspatial_tweet_reports';
 config.pg.table_nonspatial_users = 'nonspatial_tweet_users';
 
 //Twitter message texts
-config.twitter.invite_text_in = 'Invite/Verification Tweet Text [IN]';
-config.twitter.invite_text_en = 'Invite/Verification Tweet Text [EN]';
-config.twitter.thanks_text_in = 'Thanks/location-enabled reminder Tweet Text [IN]';
-config.twitter.thanks_text_en = 'Thanks/location-enabled reminder Tweet Text [EN]';
+config.twitter.invite_text = {};
+config.twitter.invite_text.in = 'Invite/Verification Tweet Text [IN]';
+config.twitter.invite_text.en = 'Invite/Verification Tweet Text [EN]';
+config.twitter.thanks_text = {};
+config.twitter.thanks_text.in = 'Thanks/location-enabled reminder Tweet Text [IN]';
+config.twitter.thanks_text.en = 'Thanks/location-enabled reminder Tweet Text [EN]';
 
 module.exports = config;
