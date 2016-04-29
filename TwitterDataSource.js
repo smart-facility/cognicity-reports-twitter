@@ -160,9 +160,6 @@ TwitterDataSource.prototype.filter = function(tweet) {
 					
 					// Geo check
 					if ( tweet.coordinates !== null ) {
-						self.logger.silly("2 Filtering tweet:");
-						self.logger.silly(tweet);
-						
 						self.insertUnConfirmed(tweet); // insert unconfirmed report, then invite the user to participate
 						if ( tweet.lang === 'id' ){
 							self.sendReplyTweet(tweet.user.screen_name, self.config.twitter.invite_text_in, generateInsertInviteeCallback(tweet));	
