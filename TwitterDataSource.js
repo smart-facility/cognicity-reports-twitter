@@ -249,16 +249,8 @@ TwitterDataSource.prototype.insertConfirmedUser = function(tweet) {
  */
 TwitterDataSource.prototype.insertInvitee = function(tweet) {
 	var self = this;
-
-	self.reports.dbQuery(
-		{
-			text : "INSERT INTO " + self.config.pg.table_invitees + " (user_hash) VALUES (md5($1));",
-			values : [ tweet.user.screen_name ]
-		},
-		function(result) {
-			self.logger.info('Logged new invitee');
-		}
-	);
+	
+	self._baseInsertInvitee(tweet.user.screen_name);
 };
 
 /**
