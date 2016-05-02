@@ -7,14 +7,19 @@ config.twitter = {};
 config.twitter.stream = true; //Set to false to turn off twitter connection (for testing)
 
 //Twitter stream parameters
+config.twitter.send_enabled = false; //send verfication requests?
+
 config.twitter.bbox = '106.5894, -6.4354, 107.0782, -5.9029'; // Jakarta appx.
 config.twitter.track = 'flood, banjir'; //Twitter track keywords
 config.twitter.users = '@petajkt'; //Verification twitter account
 config.twitter.timeout = 900000; //Default twitter stream timeout (milliseconds) 600000 (10 minutes)
 config.twitter.city = 'jakarta'; //User profile location keyword
-config.twitter.stream = true; //connect to stream and log reports?
 
-config.twitter.send_enabled = false; //send verfication requests?
+config.twitter.usernameReplyBlacklist = ''; // Twitter usernames (without @, comma separated for multiples) which will never be sent to in response to tweet processing
+
+config.twitter.stream = true; //connect to stream and log reports?
+//Append a timestamp to each sent tweet except response to confirmed reports with unique urls
+config.twitter.addTimestamp = true;
 
 //Twitter app authentication details
 config.twitter.consumer_key = '';

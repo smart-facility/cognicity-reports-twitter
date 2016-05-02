@@ -124,52 +124,67 @@ TwitterDataSource.prototype.filter = function(tweet) {
 		};
 	}
 	
+	self.logger.silly("Processing tweet:");
+	self.logger.silly(tweet);
+	
 	// Keyword check
 	for (var i=0; i<self.config.twitter.keywords.length; i++){
 		var re = new RegExp(self.config.twitter.keywords[i], "gi");
 		if (tweet.text.match(re)){
+			self.logger.silly("Tweet matches keyword: " + self.config.twitter.keywords[i]);
 			
 			// Username check
 			for (var j=0; i<self.config.twitter.usernames.length; j++){
 				var userRegex = new RegExp(self.config.twitter.usernames[j], "gi");
 				if ( tweet.text.match(userRegex) ) {
+					self.logger.silly("Tweet matches username: " + self.config.twitter.usernames[j]);
+					
 					// regexp for city
 					var cityRegex = new RegExp(self.config.twitter.city, "gi");
 					
 					// Geo check
 					if ( tweet.coordinates !== null ){
+						self.logger.silly("Tweet has coordinates, confirmed report");
+						
 						self.insertConfirmed(tweet); //user + geo = confirmed report!
 						
 					} else if(tweet.place !== null && tweet.place.match(cityRegex) || tweet.user.location !== null && tweet.user.location.match(cityRegex)){
+						self.logger.silly("Tweet matches city or location: " + self.config.twitter.city);
+						
 						// City location check
 						if (tweet.lang === 'id'){
 							self.insertNonSpatial(tweet); // User sent us a message but no geo, log as such
-							self.sendReplyTweet(tweet.user.screen_name, self.config.twitter.thanks_text.in); // send geo reminder
+							self.sendReplyTweet(tweet, self.config.twitter.thanks_text.in); // send geo reminder
 						} else {
 							self.insertNonSpatial(tweet); // User sent us a message but no geo, log as such
-							self.sendReplyTweet(tweet.user.screen_name, self.config.twitter.thanks_text.en); // send geo reminder
+							self.sendReplyTweet(tweet, self.config.twitter.thanks_text.en); // send geo reminder
 						}
 					}
 					return;
 					
 				} else if ( j === self.config.twitter.usernames.length-1 ) {
+					self.logger.silly("Tweet does not match any usernames");
 					// End of usernames list, no match so message is unconfirmed
 					
 					// Geo check
 					if ( tweet.coordinates !== null ) {
+						self.logger.silly("Tweet has coordinates - unconfirmed report, invite user");
+
 						self.insertUnConfirmed(tweet); // insert unconfirmed report, then invite the user to participate
 						if ( tweet.lang === 'id' ){
-							self.sendReplyTweet(tweet.user.screen_name, self.config.twitter.invite_text.in, generateInsertInviteeCallback(tweet));	
+							self.sendReplyTweet(tweet, self.config.twitter.invite_text.in, generateInsertInviteeCallback(tweet));	
 						} else {
-							self.sendReplyTweet(tweet.user.screen_name, self.config.twitter.invite_text.en, generateInsertInviteeCallback(tweet));
+							self.sendReplyTweet(tweet, self.config.twitter.invite_text.en, generateInsertInviteeCallback(tweet));
 						}
 						
 					} else {
+						self.logger.silly("Tweet has no geo data - keyword was present, invite user");
+						
 						// no geo, no user - but keyword so send invite
 						if (tweet.lang === 'id'){
-							self.sendReplyTweet(tweet.user.screen_name, self.config.twitter.invite_text.in, generateInsertInviteeCallback(tweet));
+							self.sendReplyTweet(tweet, self.config.twitter.invite_text.in, generateInsertInviteeCallback(tweet));
 						} else {
-							self.sendReplyTweet(tweet.user.screen_name, self.config.twitter.invite_text.en, generateInsertInviteeCallback(tweet));
+							self.sendReplyTweet(tweet, self.config.twitter.invite_text.en, generateInsertInviteeCallback(tweet));
 						}
 					}
 					
@@ -178,45 +193,8 @@ TwitterDataSource.prototype.filter = function(tweet) {
 			}
 		}
 	}
-};
-
-/**
- * Send @reply Twitter message
- */
-TwitterDataSource.prototype.sendReplyTweet = function(user, message, callback) {
-	var self = this;
 	
-	self.reports.dbQuery(
-		{
-			text: "SELECT user_hash FROM " + self.config.pg.table_all_users + " WHERE user_hash = md5($1);",
-			values: [ user ]
-		},
-		function(result) {
-			if (result && result.rows && result.rows.length === 0) {
-				if (self.config.twitter.send_enabled === true){
-					self.twitter.updateStatus('@'+user+' '+message, function(err, data) {
-						if (err) {
-							self.logger.error('Tweeting failed: '+err);
-						} else {
-							if (callback) {
-								callback();
-							}
-						}
-					});	
-			
-				} else { // for testing
-					self.logger.debug('sendReplyTweet is in test mode - no message will be sent. Callback will still run.');
-					self.logger.debug('@'+user+' '+message);
-					if (callback) {
-						callback();
-					}
-				}
-			} else {
-				self.logger.debug("Not performing callback as user already exists");
-			}
-		}
-	);
-
+	self.logger.silly("Tweet processing ended without calling any actions");
 };
 
 /**
@@ -360,6 +338,23 @@ TwitterDataSource.prototype.insertNonSpatialUser = function(tweet) {
 			}
 		);
 	});
+};
+
+/**
+ * Send @reply Twitter message
+ * @param {object} tweet The tweet object this is a reply to
+ * @param {string} message The tweet text to send
+ * @param {function} success Callback function called on success
+ */
+TwitterDataSource.prototype._sendReplyTweet = function(tweet, message, success) {
+	var self = this;
+	
+	self._baseSendReplyTweet(
+		tweet.user.screen_name, 
+		tweet.id, 
+		message, 
+		success
+	);
 };
 
 // Export the TwitterDataSource constructor
