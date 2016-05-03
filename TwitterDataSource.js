@@ -3,6 +3,9 @@
 // Prototype object this object extends from - contains basic twitter interaction functions
 var BaseTwitterDataSource = require('../BaseTwitterDataSource/BaseTwitterDataSource.js');
 
+// moment time library
+var moment = require('moment');
+
 /**
  * The Twitter data source.
  * Connect to the Twitter stream and process matching tweet data.
@@ -154,10 +157,10 @@ TwitterDataSource.prototype.filter = function(tweet) {
 						// City location check
 						if (tweet.lang === 'id'){
 							self.insertNonSpatial(tweet); // User sent us a message but no geo, log as such
-							self.sendReplyTweet(tweet, self.config.twitter.thanks_text.in); // send geo reminder
+							self._sendReplyTweet(tweet, self.config.twitter.thanks_text.in); // send geo reminder
 						} else {
 							self.insertNonSpatial(tweet); // User sent us a message but no geo, log as such
-							self.sendReplyTweet(tweet, self.config.twitter.thanks_text.en); // send geo reminder
+							self._sendReplyTweet(tweet, self.config.twitter.thanks_text.en); // send geo reminder
 						}
 					}
 					return;
@@ -172,9 +175,9 @@ TwitterDataSource.prototype.filter = function(tweet) {
 
 						self.insertUnConfirmed(tweet); // insert unconfirmed report, then invite the user to participate
 						if ( tweet.lang === 'id' ){
-							self.sendReplyTweet(tweet, self.config.twitter.invite_text.in, generateInsertInviteeCallback(tweet));	
+							self._sendReplyTweet(tweet, self.config.twitter.invite_text.in, generateInsertInviteeCallback(tweet));	
 						} else {
-							self.sendReplyTweet(tweet, self.config.twitter.invite_text.en, generateInsertInviteeCallback(tweet));
+							self._sendReplyTweet(tweet, self.config.twitter.invite_text.en, generateInsertInviteeCallback(tweet));
 						}
 						
 					} else {
@@ -182,9 +185,9 @@ TwitterDataSource.prototype.filter = function(tweet) {
 						
 						// no geo, no user - but keyword so send invite
 						if (tweet.lang === 'id'){
-							self.sendReplyTweet(tweet, self.config.twitter.invite_text.in, generateInsertInviteeCallback(tweet));
+							self._sendReplyTweet(tweet, self.config.twitter.invite_text.in, generateInsertInviteeCallback(tweet));
 						} else {
-							self.sendReplyTweet(tweet, self.config.twitter.invite_text.en, generateInsertInviteeCallback(tweet));
+							self._sendReplyTweet(tweet, self.config.twitter.invite_text.en, generateInsertInviteeCallback(tweet));
 						}
 					}
 					
@@ -348,6 +351,15 @@ TwitterDataSource.prototype._sendReplyTweet = function(tweet, message, success) 
 		success
 	);
 };
+
+/**
+ * Convert twitter custom date format to ISO8601 format.
+ * @param {string} Twitter date string
+ * @returns {string} ISO8601 format date string
+ */
+TwitterDataSource.prototype._twitterDateToIso8601(twitterDate) {
+	return moment(twitterDate, "ddd MMM D HH:mm:ss Z YYYY").toISOString()
+}
 
 // Export the TwitterDataSource constructor
 module.exports = TwitterDataSource;
