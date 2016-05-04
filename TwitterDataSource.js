@@ -205,11 +205,7 @@ TwitterDataSource.prototype.filter = function(tweet) {
 TwitterDataSource.prototype._getMessage = function(code, tweet) {
 	var self = this;
 
-	// Fetch the language codes from both twitter and Gnip data, if present
-	var langs = [];
-	if (tweet.lang) langs.push(tweet.lang);
-
-	return self._baseGetMessage(code, langs);
+	return self._baseGetMessage(code, self._parseLangsFromActivity(tweet) );
 };
 
 /**
@@ -218,45 +214,18 @@ TwitterDataSource.prototype._getMessage = function(code, tweet) {
 TwitterDataSource.prototype.insertConfirmed = function(tweet) {
 	var self = this;
 	
-	self.reports.dbQuery(
-		{
-			text: "INSERT INTO " + self.config.pg.table_tweets + " " +
-				"(created_at, text, hashtags, text_urls, user_mentions, lang, the_geom, tweet_id) " +
-				"VALUES $1, $2, $3, $4, $5, $6, ST_GeomFromText('POINT(' || $7 || ')',4326), $8 ",
-			values: [
-			    self._twitterDateToIso8601(tweet.created_at), 
-			    tweet.text, 
-			    JSON.stringify(tweet.entities.hashtags), 
-			    JSON.stringify(tweet.entities.urls),
-			    JSON.stringify(tweet.entities.user_mentions), 
-			    tweet.lang,
-			    tweet.coordinates.coordinates[0]+" "+tweet.coordinates.coordinates[1],
-			    tweet.id
-			]
-		},
-		function(result) {
-			self.logger.info( 'logged confirmed tweet report' );
-			self.insertConfirmedUser(tweet);
-		}
-	);
-};
-
-/**
- * Insert a confirmed user into the database
- */
-TwitterDataSource.prototype.insertConfirmedUser = function(tweet) {
-	var self = this;
-	
-	self.reports.dbQuery(
-		{
-			text : "SELECT upsert_tweet_users(md5($1));",
-			values : [
-			    tweet.user.screen_name
-			]
-		},
-		function(result) {
-			self.logger.info('Logged confirmed tweet user');
-		}
+	self._baseInsertConfirmed(
+		tweet.user.screen_name, 
+		self._parseLangsFromActivity(tweet), 
+		tweet.id, 
+		self._twitterDateToIso8601(tweet.created_at), 
+		tweet.text, 
+		JSON.stringify(tweet.entities.hashtags), 
+		JSON.stringify(tweet.entities.urls), 
+		JSON.stringify(tweet.entities.user_mentions), 
+		tweet.lang, 
+		"", 
+		tweet.coordinates.coordinates[0]+" "+tweet.coordinates.coordinates[1]
 	);
 };
 
@@ -322,6 +291,18 @@ TwitterDataSource.prototype._sendReplyTweet = function(tweet, message, success) 
  */
 TwitterDataSource.prototype._twitterDateToIso8601 = function(twitterDate) {
 	return moment(twitterDate, "ddd MMM D HH:mm:ss Z YYYY").toISOString();
+};
+
+/**
+ * TODO
+ */
+TwitterDataSource.prototype._parseLangsFromActivity = function(tweet) {
+	// Fetch the language codes from both twitter and Gnip data, if present
+	var langs = [];
+	
+	if (tweet.lang) langs.push(tweet.lang);
+	
+	return langs;
 };
 
 // Export the TwitterDataSource constructor
