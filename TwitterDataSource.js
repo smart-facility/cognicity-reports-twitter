@@ -321,17 +321,15 @@ TwitterDataSource.prototype.insertNonSpatial = function(tweet) {
 TwitterDataSource.prototype.insertNonSpatialUser = function(tweet) {
 	var self = this;
 	
-	self._ifNewUser( tweet.user.screen_name, function(result) {
-		self.reports.dbQuery(
-			{
-				text : "INSERT INTO " + self.config.pg.table_nonspatial_users + " (user_hash) VALUES (md5($1));",
-				values : [ tweet.user.screen_name ]
-			},
-			function(result) {
-				self.logger.info("Inserted non-spatial user");
-			}
-		);
-	});
+	self.reports.dbQuery(
+		{
+			text : "INSERT INTO " + self.config.pg.table_nonspatial_users + " (user_hash) VALUES (md5($1));",
+			values : [ tweet.user.screen_name ]
+		},
+		function(result) {
+			self.logger.info("Inserted non-spatial user");
+		}
+	);
 };
 
 /**
