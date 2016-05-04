@@ -221,8 +221,8 @@ TwitterDataSource.prototype.insertConfirmed = function(tweet) {
 	self.reports.dbQuery(
 		{
 			text: "INSERT INTO " + self.config.pg.table_tweets + " " +
-				"(created_at, text, hashtags, urls, user_mentions, lang, the_geom) " +
-				"VALUES $1, $2, $3, $4, $5, $6, ST_GeomFromText('POINT(' || $7 || ')',4326) ",
+				"(created_at, text, hashtags, text_urls, user_mentions, lang, the_geom, tweet_id) " +
+				"VALUES $1, $2, $3, $4, $5, $6, ST_GeomFromText('POINT(' || $7 || ')',4326), $8 ",
 			values: [
 			    self._twitterDateToIso8601(tweet.created_at), 
 			    tweet.text, 
@@ -230,7 +230,8 @@ TwitterDataSource.prototype.insertConfirmed = function(tweet) {
 			    JSON.stringify(tweet.entities.urls),
 			    JSON.stringify(tweet.entities.user_mentions), 
 			    tweet.lang,
-			    tweet.coordinates.coordinates[0]+" "+tweet.coordinates.coordinates[1]
+			    tweet.coordinates.coordinates[0]+" "+tweet.coordinates.coordinates[1],
+			    tweet.id
 			]
 		},
 		function(result) {
