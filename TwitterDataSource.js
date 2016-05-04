@@ -155,13 +155,8 @@ TwitterDataSource.prototype.filter = function(tweet) {
 						self.logger.silly("Tweet matches city or location: " + self.config.twitter.city);
 						
 						// City location check
-						if (tweet.lang === 'id'){
-							self.insertNonSpatial(tweet); // User sent us a message but no geo, log as such
-							self._sendReplyTweet(tweet, self.config.twitter.thanks_text.in); // send geo reminder
-						} else {
-							self.insertNonSpatial(tweet); // User sent us a message but no geo, log as such
-							self._sendReplyTweet(tweet, self.config.twitter.thanks_text.en); // send geo reminder
-						}
+						self.insertNonSpatial( tweet ); // User sent us a message but no geo, log as such
+						self._sendReplyTweet( tweet, self._getMessage('thanks_text', tweet) ); // send geo reminder
 					}
 					return;
 					
@@ -174,21 +169,21 @@ TwitterDataSource.prototype.filter = function(tweet) {
 						self.logger.silly("Tweet has coordinates - unconfirmed report, invite user");
 
 						self.insertUnConfirmed(tweet); // insert unconfirmed report, then invite the user to participate
-						if ( tweet.lang === 'id' ){
-							self._sendReplyTweet(tweet, self.config.twitter.invite_text.in, generateInsertInviteeCallback(tweet));	
-						} else {
-							self._sendReplyTweet(tweet, self.config.twitter.invite_text.en, generateInsertInviteeCallback(tweet));
-						}
+						self._sendReplyTweet(
+							tweet, 
+							self._getMessage('invite_text', tweet), 
+							generateInsertInviteeCallback(tweet)
+						);	
 						
 					} else {
 						self.logger.silly("Tweet has no geo data - keyword was present, invite user");
 						
 						// no geo, no user - but keyword so send invite
-						if (tweet.lang === 'id'){
-							self._sendReplyTweet(tweet, self.config.twitter.invite_text.in, generateInsertInviteeCallback(tweet));
-						} else {
-							self._sendReplyTweet(tweet, self.config.twitter.invite_text.en, generateInsertInviteeCallback(tweet));
-						}
+						self._sendReplyTweet(
+							tweet, 
+							self._getMessage('invite_text', tweet), 
+							generateInsertInviteeCallback(tweet)
+						);
 					}
 					
 					return;
@@ -198,6 +193,23 @@ TwitterDataSource.prototype.filter = function(tweet) {
 	}
 	
 	self.logger.silly("Tweet processing ended without calling any actions");
+};
+
+/**
+ * Resolve message code from config.twitter using passed language codes.
+ * Will fall back to trying to resolve message using default language set in configuration.
+ * @param {string} code Message code to lookup in config.twitter
+ * @param {object} tweet The tweet object to fetch language code from
+ * @returns {?string} Message text, or null if not resolved.
+ */
+TwitterDataSource.prototype._getMessage = function(code, tweet) {
+	var self = this;
+
+	// Fetch the language codes from both twitter and Gnip data, if present
+	var langs = [];
+	if (tweet.lang) langs.push(tweet.lang);
+
+	return self._baseGetMessage(code, langs);
 };
 
 /**
