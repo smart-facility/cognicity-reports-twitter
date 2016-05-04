@@ -286,49 +286,14 @@ TwitterDataSource.prototype.insertUnConfirmed = function(tweet) {
 TwitterDataSource.prototype.insertNonSpatial = function(tweet) {
 	var self = this;
 
-	self.reports.dbQuery(
-		{
-			text : "INSERT INTO " + self.config.pg.table_nonspatial_tweet_reports + " " +
-				"(created_at, text, hashtags, urls, user_mentions, lang) " +
-				"VALUES (" +
-				"$1, " +
-				"$2, " +
-				"$3, " +
-				"$4, " +
-				"$5, " +
-				"$6" +
-				");",
-			values : [
-				self._twitterDateToIso8601(tweet.created_at),
-				tweet.text,
-				JSON.stringify(tweet.entities.hashtags),
-				JSON.stringify(tweet.entities.urls),
-				JSON.stringify(tweet.entities.user_mentions),
-				tweet.lang
-			]
-		},
-
-		function(result) {
-			self.logger.info('Inserted non-spatial tweet');
-			self.insertNonSpatialUser(tweet);
-		}
-	);
-};
-
-/**
- * Insert a non-spatial user into the database
- */
-TwitterDataSource.prototype.insertNonSpatialUser = function(tweet) {
-	var self = this;
-	
-	self.reports.dbQuery(
-		{
-			text : "INSERT INTO " + self.config.pg.table_nonspatial_users + " (user_hash) VALUES (md5($1));",
-			values : [ tweet.user.screen_name ]
-		},
-		function(result) {
-			self.logger.info("Inserted non-spatial user");
-		}
+	self._baseInsertNonSpatial(
+		tweet.user.screen_name,
+		self._twitterDateToIso8601(tweet.created_at),
+		tweet.text,
+		JSON.stringify(tweet.entities.hashtags),
+		JSON.stringify(tweet.entities.urls),
+		JSON.stringify(tweet.entities.user_mentions),
+		tweet.lang
 	);
 };
 
