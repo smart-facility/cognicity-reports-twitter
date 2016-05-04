@@ -1,11 +1,12 @@
 {
-	"name": "cognicity-reports-twitter",
-	"description": "CogniCity reports module",
-	"version": "0.0.1",
-	"author": "Tomas Holderness <tomas@uow.edu.au>",
-	"preferGlobal":false,
-	"private": true,
+  "name": "cognicity-reports-twitter",
+  "description": "CogniCity reports module",
+  "version": "0.0.1",
+  "author": "Tomas Holderness <tomas@uow.edu.au>",
+  "preferGlobal": false,
+  "private": true,
   "dependencies": {
+    "moment": "^2.13.0",
     "ntwitter": "^0.5.0",
     "rsvp": "^3.2.1"
   },

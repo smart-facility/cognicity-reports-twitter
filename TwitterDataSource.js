@@ -210,9 +210,9 @@ TwitterDataSource.prototype.insertConfirmed = function(tweet) {
 		{
 			text: "INSERT INTO " + self.config.pg.table_tweets + " " +
 				"(created_at, text, hashtags, urls, user_mentions, lang, the_geom) " +
-				"VALUES to_timestamp($1::text, 'Dy Mon DD YYYY HH24:MI:SS +ZZZZ'), $2, $3, $4, $5, $6, ST_GeomFromText('POINT(' || $7 || ')',4326) ",
+				"VALUES $1, $2, $3, $4, $5, $6, ST_GeomFromText('POINT(' || $7 || ')',4326) ",
 			values: [
-			    new Date(Date.parse(tweet.created_at)).toLocaleString(), 
+			    self._twitterDateToIso8601(tweet.created_at), 
 			    tweet.text, 
 			    JSON.stringify(tweet.entities.hashtags), 
 			    JSON.stringify(tweet.entities.urls),
@@ -262,22 +262,9 @@ TwitterDataSource.prototype.insertInvitee = function(tweet) {
 TwitterDataSource.prototype.insertUnConfirmed = function(tweet) {
 	var self = this;
 
-	self.reports.dbQuery(
-		{
-			text : "INSERT INTO " + self.config.pg.table_unconfirmed + " " +
-				"(created_at, the_geom) " +
-				"VALUES ( " +
-				"to_timestamp($1::text, 'Dy Mon DD YYYY HH24:MI:SS +ZZZZ'), " +
-				"ST_GeomFromText('POINT(' || $2 || ')',4326)" +
-				");",
-			values : [
-			    new Date(Date.parse(tweet.created_at)).toLocaleString(),
-			    tweet.coordinates.coordinates[0]+" "+tweet.coordinates.coordinates[1]
-			]
-		},
-		function(result) {
-			self.logger.info('Logged unconfirmed tweet report');
-		}
+	self._baseInsertUnConfirmed(
+		self._twitterDateToIso8601(tweet.created_at),
+	    tweet.coordinates.coordinates[0]+" "+tweet.coordinates.coordinates[1]
 	);
 };
 
@@ -292,7 +279,7 @@ TwitterDataSource.prototype.insertNonSpatial = function(tweet) {
 			text : "INSERT INTO " + self.config.pg.table_nonspatial_tweet_reports + " " +
 				"(created_at, text, hashtags, urls, user_mentions, lang) " +
 				"VALUES (" +
-				"to_timestamp($1::text, 'Dy Mon DD YYYY H24:MI:SS +ZZZZ', " +
+				"$1, " +
 				"$2, " +
 				"$3, " +
 				"$4, " +
@@ -300,7 +287,7 @@ TwitterDataSource.prototype.insertNonSpatial = function(tweet) {
 				"$6" +
 				");",
 			values : [
-				new Date(Date.parse(tweet.created_at)).toLocaleString(),
+				self._twitterDateToIso8601(tweet.created_at),
 				tweet.text,
 				JSON.stringify(tweet.entities.hashtags),
 				JSON.stringify(tweet.entities.urls),
@@ -357,9 +344,9 @@ TwitterDataSource.prototype._sendReplyTweet = function(tweet, message, success) 
  * @param {string} Twitter date string
  * @returns {string} ISO8601 format date string
  */
-TwitterDataSource.prototype._twitterDateToIso8601(twitterDate) {
-	return moment(twitterDate, "ddd MMM D HH:mm:ss Z YYYY").toISOString()
-}
+TwitterDataSource.prototype._twitterDateToIso8601 = function(twitterDate) {
+	return moment(twitterDate, "ddd MMM D HH:mm:ss Z YYYY").toISOString();
+};
 
 // Export the TwitterDataSource constructor
 module.exports = TwitterDataSource;
