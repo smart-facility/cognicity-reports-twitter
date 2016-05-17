@@ -37,47 +37,6 @@ twitterDataSource.reports.logger = twitterDataSource.logger;
 // Test harness for CognicityReportsPowertrack object
 describe( 'TwitterDataSource', function() {
 
-	describe( "sendReplyTweet", function() {
-		var tweetId = '12345678';
-		var tweetUser = 'ragnar';
-		var tweet = {
-			user: {
-				screen_name: tweetUser
-			},
-			id_str: tweetId
-		};
-		var oldBaseSendReplyTweet;
-		var baseSendReplyTweetArgs = {};
-		
-		before( function() {
-			oldBaseSendReplyTweet = twitterDataSource._baseSendReplyTweet;
-			twitterDataSource._baseSendReplyTweet = function(user, id, msg, success) {
-				baseSendReplyTweetArgs.user = user;
-				baseSendReplyTweetArgs.id = id;
-				baseSendReplyTweetArgs.msg = msg;
-				baseSendReplyTweetArgs.success = success;
-			};
-		});
-
-		beforeEach( function() {
-			baseSendReplyTweetArgs = {};
-		});
-
-		it( "Username extracted from tweet activity", function() {
-			twitterDataSource._sendReplyTweet( tweet, 'a', 'b' );
-			test.value( baseSendReplyTweetArgs.user ).is( tweetUser );
-		});
-
-		it( "ID extracted from tweet activity", function() {
-			twitterDataSource._sendReplyTweet( tweet, 'a', 'b' );
-			test.value( baseSendReplyTweetArgs.id ).is( tweetId );
-		});
-
-		after( function(){
-			twitterDataSource._baseSendReplyTweet = oldBaseSendReplyTweet;
-		});
-	});
-	
 	describe( "_parseLangsFromTweet", function() {
 		
 		var expectedTwitter = "moo";
@@ -97,6 +56,17 @@ describe( 'TwitterDataSource', function() {
 			};
 			var response = twitterDataSource._parseLangsFromTweet(activity);
 			test.array( response ).hasLength( 0 );
+		});
+
+	});
+
+	describe( "_twitterDateToIso8601", function() {
+		
+		var tweetDate = "Wed Aug 12 00:42:51 -0100 2015";
+		var expectedDate = "2015-08-12T01:42:51.000Z";
+		
+		it( 'Twitter code is parsed', function() {
+			test.value( twitterDataSource._twitterDateToIso8601(tweetDate) ).is( expectedDate );
 		});
 
 	});
