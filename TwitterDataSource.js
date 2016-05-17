@@ -210,7 +210,7 @@ TwitterDataSource.prototype.filter = function(tweet) {
 TwitterDataSource.prototype._getMessage = function(code, tweet) {
 	var self = this;
 
-	return self._baseGetMessage(code, self._parseLangsFromActivity(tweet) );
+	return self._baseGetMessage(code, self._parseLangsFromTweet(tweet) );
 };
 
 /**
@@ -221,7 +221,7 @@ TwitterDataSource.prototype.insertConfirmed = function(tweet) {
 	
 	self._baseInsertConfirmed(
 		tweet.user.screen_name, 
-		self._parseLangsFromActivity(tweet), 
+		self._parseLangsFromTweet(tweet), 
 		tweet.id_str, 
 		self._twitterDateToIso8601(tweet.created_at), 
 		tweet.text, 
@@ -301,8 +301,8 @@ TwitterDataSource.prototype._twitterDateToIso8601 = function(twitterDate) {
 /**
  * TODO
  */
-TwitterDataSource.prototype._parseLangsFromActivity = function(tweet) {
-	// Fetch the language codes from both twitter and Gnip data, if present
+TwitterDataSource.prototype._parseLangsFromTweet = function(tweet) {
+	// Fetch the language codes from twitter data, if present
 	var langs = [];
 	
 	if (tweet.lang) langs.push(tweet.lang);

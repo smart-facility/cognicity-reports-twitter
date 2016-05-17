@@ -78,6 +78,29 @@ describe( 'TwitterDataSource', function() {
 		});
 	});
 	
+	describe( "_parseLangsFromTweet", function() {
+		
+		var expectedTwitter = "moo";
+		
+		it( 'Twitter code is parsed', function() {
+			var activity = {
+				lang: expectedTwitter 	
+			};
+			var response = twitterDataSource._parseLangsFromTweet(activity);
+			test.array( response ).hasLength( 1 );
+			test.array( response ).hasValue( expectedTwitter );
+		});
+		
+		it( 'No codes are parsed', function() {
+			var activity = {
+				langz: expectedTwitter
+			};
+			var response = twitterDataSource._parseLangsFromTweet(activity);
+			test.array( response ).hasLength( 0 );
+		});
+
+	});
+	
 // Test template
 //	describe( "suite", function() {
 //		before( function() {
