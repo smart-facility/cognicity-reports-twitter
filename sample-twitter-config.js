@@ -15,6 +15,7 @@ config.twitter.users = '@petajkt'; //Verification twitter account
 config.twitter.timeout = 900000; //Default twitter stream timeout (milliseconds) 600000 (10 minutes)
 config.twitter.city = 'jakarta'; //User profile location keyword
 
+config.twitter.usernameVerify = ''; // Twitter username (without @) authorised to verify reports via retweet functionality
 config.twitter.usernameReplyBlacklist = ''; // Twitter usernames (without @, comma separated for multiples) which will never be sent to in response to tweet processing
 
 config.twitter.stream = true; //connect to stream and log reports?

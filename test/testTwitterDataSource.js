@@ -44,7 +44,7 @@ describe( 'TwitterDataSource', function() {
 			user: {
 				screen_name: tweetUser
 			},
-			id: tweetId
+			id_str: tweetId
 		};
 		var oldBaseSendReplyTweet;
 		var baseSendReplyTweetArgs = {};

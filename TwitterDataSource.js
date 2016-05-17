@@ -128,7 +128,12 @@ TwitterDataSource.prototype.filter = function(tweet) {
 	}
 	
 	self.logger.silly("Processing tweet:");
-	self.logger.silly(tweet);
+	self.logger.silly(JSON.stringify(tweet));
+	
+	// Catch tweets from authorised user to verification
+	if ( tweet.user.screen_name === self.config.twitter.usernameVerify && tweet.retweeted_status) {
+		self._processVerifiedReport( tweet.retweeted_status.id_str );
+	}
 	
 	// Keyword check
 	for (var i=0; i<self.config.twitter.keywords.length; i++){
@@ -217,7 +222,7 @@ TwitterDataSource.prototype.insertConfirmed = function(tweet) {
 	self._baseInsertConfirmed(
 		tweet.user.screen_name, 
 		self._parseLangsFromActivity(tweet), 
-		tweet.id, 
+		tweet.id_str, 
 		self._twitterDateToIso8601(tweet.created_at), 
 		tweet.text, 
 		JSON.stringify(tweet.entities.hashtags), 
@@ -278,7 +283,7 @@ TwitterDataSource.prototype._sendReplyTweet = function(tweet, message, success) 
 	
 	self._baseSendReplyTweet(
 		tweet.user.screen_name, 
-		tweet.id, 
+		tweet.id_str, 
 		message, 
 		success
 	);
