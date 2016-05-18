@@ -114,9 +114,16 @@ TwitterDataSource.prototype.start = function(){
 };
 
 /**
+ * Twitter tweet API object.
+ * @see {@link https://dev.twitter.com/overview/api/tweets}
+ * @typedef Tweet
+ */
+
+/**
  * Handle an incoming tweet.
  * Filter it based on our matching criteria and respond appropriately -
  * saving to the database, sending a tweet to the author, ignoring, etc.
+ * @param {Tweet} tweet The tweet object to process
  */
 TwitterDataSource.prototype.filter = function(tweet) {
 	var self = this;
@@ -204,7 +211,7 @@ TwitterDataSource.prototype.filter = function(tweet) {
  * Resolve message code from config.twitter using passed language codes.
  * Will fall back to trying to resolve message using default language set in configuration.
  * @param {string} code Message code to lookup in config.twitter
- * @param {object} tweet The tweet object to fetch language code from
+ * @param {Tweet} tweet The tweet object to fetch language code from
  * @returns {?string} Message text, or null if not resolved.
  */
 TwitterDataSource.prototype._getMessage = function(code, tweet) {
@@ -215,6 +222,7 @@ TwitterDataSource.prototype._getMessage = function(code, tweet) {
 
 /**
  * Insert a confirmed tweet report into the database
+ * @param {Tweet} tweet The tweet object insert confirmed report from
  */
 TwitterDataSource.prototype.insertConfirmed = function(tweet) {
 	var self = this;
@@ -236,6 +244,7 @@ TwitterDataSource.prototype.insertConfirmed = function(tweet) {
 
 /**
  * Insert an invited user into the database
+ * @param {Tweet} tweet The tweet object insert invitee from
  */
 TwitterDataSource.prototype.insertInvitee = function(tweet) {
 	var self = this;
@@ -245,6 +254,7 @@ TwitterDataSource.prototype.insertInvitee = function(tweet) {
 
 /**
  * Insert an unconfirmed tweet report into the database
+ * @param {Tweet} tweet The tweet object insert unconfirmed report from
  */
 TwitterDataSource.prototype.insertUnConfirmed = function(tweet) {
 	var self = this;
@@ -257,6 +267,7 @@ TwitterDataSource.prototype.insertUnConfirmed = function(tweet) {
 
 /**
  * Insert a non-spatial tweet report into the database
+ * @param {Tweet} tweet The tweet object insert non-spatial report from
  */
 TwitterDataSource.prototype.insertNonSpatial = function(tweet) {
 	var self = this;
@@ -274,7 +285,7 @@ TwitterDataSource.prototype.insertNonSpatial = function(tweet) {
 
 /**
  * Send @reply Twitter message
- * @param {object} tweet The tweet object this is a reply to
+ * @param {Tweet} tweet The tweet object this is a reply to
  * @param {string} message The tweet text to send
  * @param {function} success Callback function called on success
  */
@@ -299,7 +310,8 @@ TwitterDataSource.prototype._twitterDateToIso8601 = function(twitterDate) {
 };
 
 /**
- * TODO
+ * Parse language code from the tweet data.
+ * @param {Tweet} tweet The tweet object to read languages from
  */
 TwitterDataSource.prototype._parseLangsFromTweet = function(tweet) {
 	// Fetch the language codes from twitter data, if present
