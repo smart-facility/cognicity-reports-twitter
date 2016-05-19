@@ -46,20 +46,30 @@ Then you can run `npm install`.
 ### Configuration
 App configuration parameters are stored in a configuration file which is parsed by app.js. See sample-reports-config.js for an example configuration.
 
-#### Twitter stream configuration
+#### Twitter send parameters
+* send_enabled [true | false] - set to true to enable confirmation request tweets to be sent.
+* addTimestamp [true | false] - if true, append a timestamp to each sent tweet.
+* url_length - The length of the twitter t.co URL shortened URLs (see https://dev.twitter.com/overview/t.co ).
+
+#### Twitter account configuration
 Set the app authentication parameters as provided by Twitter. See the [ntwitter-module](https://github.com/AvianFlu/ntwitter) documentation for more details.
+* usernameReplyBlacklist - Twitter usernames (without @, comma separated for multiples) which will never be sent to in response to tweet processing
+* usernameVerify - Twitter username (without @) authorised to verify reports via retweet functionality
 
 #### Twitter stream parameters
-* bounding box coordinates - area of interest (lat, long) cognicity-reports will collect all geo-located tweets in the specified area, and then filter by keyword
-* track keywords - cognicity-reports will collect all tweets (geo-located and non-spatial) which contains these words
+* bbox - bounding box coordinates for area of interest (lat, long) cognicity-reports will collect all geo-located tweets in the specified area, and then filter by keyword
+* track - keywords, cognicity-reports will collect all tweets (geo-located and non-spatial) which contains these words
 * city - specify user city to help filter tweets without geolocation data
 * users - the Twitter account usernames designated for confirmation tweets.
 * send_enabled [true | false] - set to true to enable confirmation request tweets to be sent.
 * stream [true | false] - set to true to connect to twitter stream.
+* timeout - if no tweet is received in this time (in ms) connection will be reestablished 
 
-#### Twitter message text
-* invite_in/en - Text for confrmation request tweets [Bahasa Indonesian/English]
-* thanks_in/en - Text for geolocation reminders [Bahasa Indonesian/English]
+#### Messages
+Messages can be at most 109 characters long if addTimestamp is enabled, or 123 characters long if addTimestamp is disabled.
+Note that this length includes one shortened URL at current lengths - see https://dev.twitter.com/overview/t.co for details.
+* invite_text - Text for confirmation request tweets
+* thanks_text - Thank-you message for confirmed tweet
 
 #### Postgres connection
 * connection string - PostgreSQL connection details (see [node-postgres module documenation](https://github.com/brianc/node-postgres)).

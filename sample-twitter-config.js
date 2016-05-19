@@ -13,6 +13,7 @@
  * @property {object} twitter Configuration object for Twitter interface
  * @property {boolean} twitter.stream If true, connect to the twitter streaming API and retrieve tweets to process
  * @property {boolean} twitter.send_enabled If true, send tweets to users asking them to verify their reports
+ * @property {number} twitter.url_length Length that URLs in tweets are shortened to
  * @property {string} twitter.bbox Twitter streaming API search parameters bounding box
  * @property {string} twitter.track Twitter streaming API search parameters keywords
  * @property {string} twitter.users Usernames for which tweets will be processed (i.e., usernames for the data source to monitor) 
@@ -48,6 +49,7 @@ config.twitter.stream = true; //Set to false to turn off twitter connection (for
 
 //Twitter stream parameters
 config.twitter.send_enabled = false; //send verfication requests?
+config.twitter.url_length = 23; // t.co url shortener length
 
 config.twitter.bbox = '106.5894, -6.4354, 107.0782, -5.9029'; // Jakarta appx.
 config.twitter.track = 'flood, banjir'; //Twitter track keywords
