@@ -87,7 +87,7 @@ TwitterDataSource.prototype.start = function(){
 							stream.destroy();
 							// Start stream again and reset time.
 							time = 0;
-							connectStream();
+							self.connectStream();
 						}
 					}
 				}
@@ -163,7 +163,7 @@ TwitterDataSource.prototype.filter = function(tweet) {
 						
 						self.insertConfirmed(tweet); //user + geo = confirmed report!
 						
-					} else if(tweet.place !== null && tweet.place.match(cityRegex) || tweet.user.location !== null && tweet.user.location.match(cityRegex)){
+					} else if(tweet.place !== null && tweet.place.name.match(cityRegex) || tweet.user.location !== null && tweet.user.location.match(cityRegex)){
 						self.logger.silly("Tweet matches city or location: " + self.config.twitter.city);
 						
 						// City location check
@@ -179,7 +179,7 @@ TwitterDataSource.prototype.filter = function(tweet) {
 					// Geo check
 					if ( tweet.coordinates !== null ) {
 						self.logger.silly("Tweet has coordinates - unconfirmed report, invite user");
-
+						
 						self.insertUnConfirmed(tweet); // insert unconfirmed report, then invite the user to participate
 						self._sendReplyTweet(
 							tweet, 
