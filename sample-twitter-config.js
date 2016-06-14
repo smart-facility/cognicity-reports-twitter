@@ -16,9 +16,9 @@
  * @property {number} twitter.url_length Length that URLs in tweets are shortened to
  * @property {string} twitter.bbox Twitter streaming API search parameters bounding box
  * @property {string} twitter.track Twitter streaming API search parameters keywords
- * @property {string} twitter.users Usernames for which tweets will be processed (i.e., usernames for the data source to monitor) 
+ * @property {string} twitter.users Usernames for which tweets will be processed (i.e., usernames for the data source to monitor)
  * @property {number} twitter.timeout Connection will be recreated if no tweets received in this time (in ms)
- * @property {string} twitter.city City name matched against tweet place or user location for non-geo location match 
+ * @property {string} twitter.city City name matched against tweet place or user location for non-geo location match
  * @property {object} twitter.usernameVerify Twitter username (without @) authorised to verify reports via retweet functionality
  * @property {string} twitter.usernameReplyBlacklist Twitter usernames (without @, comma separated for multiples) which will never be responded to as part of tweet processing
  * @property {string} twitter.consumer_key Take from the twitter dev admin interface
@@ -49,7 +49,7 @@ config.twitter.stream = true; //Set to false to turn off twitter connection (for
 
 //Twitter stream parameters
 config.twitter.send_enabled = false; //send verfication requests?
-config.twitter.url_length = 23; // t.co url shortener length
+config.twitter.url_length = 0; // URLs no longer count as part of tweet limits so this should be 0
 
 config.twitter.bbox = '106.5894, -6.4354, 107.0782, -5.9029'; // Jakarta appx.
 config.twitter.track = 'flood, banjir'; //Twitter track keywords
