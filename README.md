@@ -2,9 +2,11 @@ CogniCity
 ===========
 **Open Source GeoSocial Intelligence Framework**
 
-# MOVE
+Travis build status: [![Build Status](https://travis-ci.org/smart-facility/cognicity-reports-twitter.svg?branch=master)](https://travis-ci.org/smart-facility/cognicity-reports-twitter)
 
-Note that this repository has been moved to [cognicity-reports-twitter](https://github.com/smart-facility/cognicity-reports-twitter). This is as part of our refactoring to make cognicity-reports a master module for collecting reports from a number of sources to be stored in a database (using the [cognicity-schema](https://github.com/smart-facility/cognicity-schema) schema). We will be transforming [cognicity-reports-twitter](https://github.com/smart-facility/cognicity-reports-twitter) (for conventional Twitter API collection) and [cognicity-reports-powertrack](https://github.com/smart-facility/cognicity-reports-powertrack) (for Twitter Gnip collection) into optional submodules, along with other new submodules to be developed for collecting data from other data sources.
+DOI for current stable release [v2.0.0](https://github.com/smart-facility/cognicity-reports-powertrack/releases/tag/v2.0.0): [![DOI](https://zenodo.org/badge/19201/smart-facility/cognicity-reports-twitter.svg)](https://zenodo.org/badge/latestdoi/19201/smart-facility/cognicity-reports-twitter)
+
+####cognicity-reports-powertrack: Module for [cognicity-reports](https://github.com/smart-facility/cognicity-reports) module to collect unconfirmed reports from Twitter via public API and send verification requests.
 
 ### About
 Cognicity-reports is the NodeJS reports module for the CogniCity framework, responsible for collecting relevant tweets, and sending users verification messages via Twitter. For detailed framework documentation see [http://cognicity.info](http://cognicity.info).
