@@ -10,7 +10,7 @@ Note that this repository has been moved to [cognicity-reports-twitter](https://
 Cognicity-reports is the NodeJS reports module for the CogniCity framework, responsible for collecting relevant tweets, and sending users verification messages via Twitter. For detailed framework documentation see [http://cognicity.info](http://cognicity.info).
 
 ### Dependencies
-* [NodeJS](http://nodejs.org) version 0.10.12 or later
+* [NodeJS](http://nodejs.org) version 4.2.1 or later
 * [PostgreSQL](http://www.postgresql.org) version 9.2 or later, with [PostGIS](http://postgis.org/) version 2.0 or later.
 
 #### Node Modules
@@ -63,7 +63,7 @@ Set the app authentication parameters as provided by Twitter. See the [ntwitter-
 * users - the Twitter account usernames designated for confirmation tweets.
 * send_enabled [true | false] - set to true to enable confirmation request tweets to be sent.
 * stream [true | false] - set to true to connect to twitter stream.
-* timeout - if no tweet is received in this time (in ms) connection will be reestablished 
+* timeout - if no tweet is received in this time (in ms) connection will be reestablished
 
 #### Messages
 Messages can be at most 109 characters long if addTimestamp is enabled, or 123 characters long if addTimestamp is disabled.
